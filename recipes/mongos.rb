@@ -19,12 +19,8 @@
 # limitations under the License.
 #
 
-include_recipe "mongodb"
+include_recipe "mongodb::default"
 include_recipe "mongodb::mongo_gem"
-
-service "mongodb" do
-  action [:disable, :stop]
-end
 
 configsrv = search(
   :node,

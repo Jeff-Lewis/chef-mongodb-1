@@ -19,9 +19,18 @@
 # limitations under the License.
 #
 
+# TODO do this only for when installing via .deb (OS check should be okay)
+execute "kill initial mongodb" do
+  command "service mongodb stop && rm -rf /etc/init.d/mongodb"
+  action :nothing
+end
+
 package node[:mongodb][:package_name] do
   action :install
   version node[:mongodb][:package_version]
+  # the deb package automatically starts mongo, which breaks stuff. stop it,
+  # immediately, but only if something changed (i.e. install).
+  notifies :run, "execute[kill initial mongodb]", :immediately
 end
 
 
@@ -37,14 +46,25 @@ if node[:mongodb][:key_file]
 end
 
 
-# configure default instance
+# configure default instance IFF it's not supposed to be part of a clustered setup
 replicaset_recipe = 'mongodb::replicaset'
-configured_as_replicaset = case Chef::Version.new(Chef::VERSION).major
-  when 0..10 then node.recipe?(replicaset_recipe)
-  else node.run_context.loaded_recipe?(replicaset_recipe)
+shard_recipe = 'mongodb::shard'
+configserver_recipe = 'mongodb::configserver'
+mongos_recipe = 'mongodb::mongos'
+is_standalone = case Chef::Version.new(Chef::VERSION).major
+  when 0..10 then
+    !node.recipe?(replicaset_recipe) &&
+    !node.recipe?(shard_recipe) &&
+    !node.recipe?(configserver_recipe) &&
+    !node.recipe?(mongos_recipe)
+  else
+    !node.run_context.loaded_recipe?(replicaset_recipe) &&
+    !node.run_context.loaded_recipe?(shard_recipe) &&
+    !node.run_context.loaded_recipe?(configserver_recipe) &&
+    !node.run_context.loaded_recipe?(mongos_recipe)
 end
 
-unless configured_as_replicaset
+if is_standalone
   mongodb_instance node['mongodb']['instance_name'] do
     mongodb_type "mongod"
     bind_ip      node['mongodb']['bind_ip']

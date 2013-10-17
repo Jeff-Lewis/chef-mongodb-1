@@ -17,11 +17,17 @@
 # limitations under the License.
 #
 
-include_recipe "mongodb"
+include_recipe "mongodb::default"
 include_recipe "mongodb::mongo_gem"
 
+shard_recipe = 'mongodb::shard'
+is_sharded = case Chef::Version.new(Chef::VERSION).major
+  when 0..10 then node.recipe?(shard_recipe)
+  else node.run_context.loaded_recipe?(shard_recipe)
+end
+
 # if we are configuring a shard as a replicaset we do nothing in this recipe
-if !node.recipe?("mongodb::shard")
+unless is_sharded
   mongodb_instance node['mongodb']['instance_name'] do
     mongodb_type "mongod"
     port         node['mongodb']['port']
