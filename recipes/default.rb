@@ -21,7 +21,7 @@
 
 # TODO do this only for when installing via .deb (OS check should be okay)
 execute "kill initial mongodb" do
-  command "service mongodb stop && rm -rf /etc/init.d/mongodb && sleep 60"
+  command "service mongodb stop && rm -rf /etc/init.d/mongodb"
   action :nothing
 end
 
