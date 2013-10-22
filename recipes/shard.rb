@@ -20,7 +20,6 @@
 #
 
 include_recipe "mongodb::default"
-include_recipe "mongodb::mongo_gem"
 
 is_replicated = node.recipe?("mongodb::replicaset")
 

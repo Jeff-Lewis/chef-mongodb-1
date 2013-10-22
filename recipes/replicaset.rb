@@ -18,7 +18,6 @@
 #
 
 include_recipe "mongodb::default"
-include_recipe "mongodb::mongo_gem"
 
 shard_recipe = 'mongodb::shard'
 is_sharded = case Chef::Version.new(Chef::VERSION).major

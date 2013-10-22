@@ -20,7 +20,6 @@
 #
 
 include_recipe "mongodb::default"
-include_recipe "mongodb::mongo_gem"
 
 # we are not starting the configserver service with the --configsvr
 # commandline option because right now this only changes the port it's

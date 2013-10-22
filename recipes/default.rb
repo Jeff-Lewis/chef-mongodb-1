@@ -19,9 +19,10 @@
 # limitations under the License.
 #
 
-# TODO do this only for when installing via .deb (OS check should be okay)
-execute "kill initial mongodb" do
-  command "service mongodb stop && rm -rf /etc/init.d/mongodb"
+include_recipe "mongodb::mongo_gem"
+
+service "10gen_preinstalled_mongodb_initd" do
+  service_name "mongodb"
   action :nothing
 end
 
@@ -30,7 +31,11 @@ package node[:mongodb][:package_name] do
   version node[:mongodb][:package_version]
   # the deb package automatically starts mongo, which breaks stuff. stop it,
   # immediately, but only if something changed (i.e. install).
-  notifies :run, "execute[kill initial mongodb]", :immediately
+  # only been tested on ubuntu 12.04 (and also might only be an issue there)
+  if platform_family?("debian")
+    notifies :stop, "service[10gen_preinstalled_mongodb_initd]", :immediately
+    notifies :disable, "service[10gen_preinstalled_mongodb_initd]", :immediately
+  end
 end
 
 
@@ -47,21 +52,17 @@ end
 
 
 # configure default instance IFF it's not supposed to be part of a clustered setup
-replicaset_recipe = 'mongodb::replicaset'
-shard_recipe = 'mongodb::shard'
-configserver_recipe = 'mongodb::configserver'
-mongos_recipe = 'mongodb::mongos'
-is_standalone = case Chef::Version.new(Chef::VERSION).major
-  when 0..10 then
-    !node.recipe?(replicaset_recipe) &&
-    !node.recipe?(shard_recipe) &&
-    !node.recipe?(configserver_recipe) &&
-    !node.recipe?(mongos_recipe)
+is_standalone = [
+  'mongodb::replicaset',
+  'mongodb::shard',
+  'mongodb::configserver',
+  'mongodb::mongos'
+].all? do |recipe|
+  if Chef::Version.new(Chef::VERSION).major < 11
+    !node.recipe?(recipe)
   else
-    !node.run_context.loaded_recipe?(replicaset_recipe) &&
-    !node.run_context.loaded_recipe?(shard_recipe) &&
-    !node.run_context.loaded_recipe?(configserver_recipe) &&
-    !node.run_context.loaded_recipe?(mongos_recipe)
+    !node.run_context.loaded_recipe?(recipe)
+  end
 end
 
 if is_standalone
