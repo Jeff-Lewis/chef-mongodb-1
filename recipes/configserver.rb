@@ -19,12 +19,7 @@
 # limitations under the License.
 #
 
-include_recipe "mongodb"
-
-service "mongodb" do
-  supports :status => true, :restart => true
-  action [:disable, :stop]
-end
+include_recipe "mongodb::default"
 
 # we are not starting the configserver service with the --configsvr
 # commandline option because right now this only changes the port it's

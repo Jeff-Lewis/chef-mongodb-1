@@ -21,12 +21,6 @@
 
 include_recipe "mongodb::default"
 
-# disable and stop the default mongodb instance
-service "mongodb" do
-  supports :status => true, :restart => true
-  action [:disable, :stop]
-end
-
 is_replicated = node.recipe?("mongodb::replicaset")
 
 

@@ -19,9 +19,24 @@
 # limitations under the License.
 #
 
+include_recipe "mongodb::mongo_gem"
+
+# provider "Chef::Provider::Service::Init::Debian" (which is what gets chosen automatically)
+# does not seem to respect service_name
+service "mongodb" do
+  action :nothing
+end
+
 package node[:mongodb][:package_name] do
   action :install
   version node[:mongodb][:package_version]
+  # the deb package automatically starts mongo, which breaks stuff. stop it,
+  # immediately, but only if something changed (i.e. install).
+  # only been tested on ubuntu 12.04 (and also might only be an issue there)
+  if platform_family?("debian")
+    notifies :stop, "service[mongodb]", :immediately
+    notifies :disable, "service[mongodb]", :immediately
+  end
 end
 
 
@@ -37,14 +52,21 @@ if node[:mongodb][:key_file]
 end
 
 
-# configure default instance
-replicaset_recipe = 'mongodb::replicaset'
-configured_as_replicaset = case Chef::Version.new(Chef::VERSION).major
-  when 0..10 then node.recipe?(replicaset_recipe)
-  else node.run_context.loaded_recipe?(replicaset_recipe)
+# configure default instance IFF it's not supposed to be part of a clustered setup
+is_standalone = [
+  'mongodb::replicaset',
+  'mongodb::shard',
+  'mongodb::configserver',
+  'mongodb::mongos'
+].all? do |recipe|
+  if Chef::Version.new(Chef::VERSION).major < 11
+    !node.recipe?(recipe)
+  else
+    !node.run_context.loaded_recipe?(recipe)
+  end
 end
 
-unless configured_as_replicaset
+if is_standalone
   mongodb_instance node['mongodb']['instance_name'] do
     mongodb_type "mongod"
     bind_ip      node['mongodb']['bind_ip']
