@@ -21,8 +21,9 @@
 
 include_recipe "mongodb::mongo_gem"
 
-service "10gen_preinstalled_mongodb_initd" do
-  service_name "mongodb"
+# provider "Chef::Provider::Service::Init::Debian" (which is what gets chosen automatically)
+# does not seem to respect service_name
+service "mongodb" do
   action :nothing
 end
 
@@ -33,8 +34,8 @@ package node[:mongodb][:package_name] do
   # immediately, but only if something changed (i.e. install).
   # only been tested on ubuntu 12.04 (and also might only be an issue there)
   if platform_family?("debian")
-    notifies :stop, "service[10gen_preinstalled_mongodb_initd]", :immediately
-    notifies :disable, "service[10gen_preinstalled_mongodb_initd]", :immediately
+    notifies :stop, "service[mongodb]", :immediately
+    notifies :disable, "service[mongodb]", :immediately
   end
 end
 
