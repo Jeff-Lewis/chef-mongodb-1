@@ -43,7 +43,7 @@ default[:mongodb][:auto_configure][:sharding] = true
 default[:mongodb][:key_file] = nil
 
 # don't use the node's fqdn, but this url instead; something like 'ec2-x-y-z-z.aws.com' or 'cs1.domain.com' (no port)
-# this is only for configuring the current node as a config server
+# if not provided, will fall back to the FQDN
 default[:mongodb][:configserver_url] = nil
 
 default[:mongodb][:enable_rest] = false
