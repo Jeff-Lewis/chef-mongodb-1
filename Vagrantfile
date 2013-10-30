@@ -17,19 +17,10 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision :chef_solo do |chef|
     chef.json = {
-      :mongodb => {
-        :auto_configure => {
-          :replicaset => false,
-          :sharding => false
-        }
-      }
     }
 
     chef.run_list = [
-      "recipe[mongodb::10gen_repo]",
-      #"recipe[mongodb::default]"
-      "recipe[mongodb::shard]",
-      "recipe[mongodb::replicaset]"
+      "recipe[mongodb::testservice]"
     ]
   end
 end
