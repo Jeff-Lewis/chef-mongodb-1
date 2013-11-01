@@ -3,7 +3,7 @@ maintainer        "edelight GmbH"
 maintainer_email  "markus.korn@edelight.de"
 license           "Apache 2.0"
 description       "Installs and configures mongodb"
-version           "0.987654321.2"
+version           "0.987654321.3"
 
 recipe "mongodb", "Installs and configures a single node mongodb instance"
 recipe "mongodb::10gen_repo", "Adds the 10gen repo to get the latest packages"
@@ -11,11 +11,12 @@ recipe "mongodb::mongos", "Installs and configures a mongos which can be used in
 recipe "mongodb::configserver", "Installs and configures a configserver for mongodb sharding"
 recipe "mongodb::shard", "Installs and configures a single shard"
 recipe "mongodb::replicaset", "Installs and configures a mongodb replicaset"
+recipe "mongodb::mms-agent", "Installs and configures a Mongo Management Service agent"
 
 depends "apt", ">= 1.8.2"
 depends "apt"
 depends "python"
-depends "runit"
+depends "runit", '>= 1.3.0'
 depends "yum"
 
 %w{ ubuntu debian freebsd centos redhat fedora amazon scientific}.each do |os|

@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
   config.berkshelf.enabled = true
 
   config.vm.provider :virtualbox do |vb|
-    vb.customize ["modifyvm", :id, "--memory", "768"]
+    vb.customize [ "modifyvm", :id, "--memory", "768" ]
   end
 
   config.vm.provision :chef_solo do |chef|
@@ -21,15 +21,21 @@ Vagrant.configure("2") do |config|
         :auto_configure => {
           :replicaset => false,
           :sharding => false
+        },
+        :nojournal => true,
+        :mms_agent => {
+          :api_key => "#{ENV['MMS_API_KEY']}",
+          :secret_key => "#{ENV['MMS_SECRET_KEY']}",
         }
       }
     }
 
+    #chef.log_level = :debug
+
     chef.run_list = [
       "recipe[mongodb::10gen_repo]",
-      #"recipe[mongodb::default]"
-      "recipe[mongodb::shard]",
-      "recipe[mongodb::replicaset]"
+      "recipe[mongodb::default]",
+      "recipe[mongodb::mms-agent]",
     ]
   end
 end
