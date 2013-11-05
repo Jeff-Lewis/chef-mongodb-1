@@ -80,7 +80,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   else
     daemon = "/usr/bin/mongos"
     dbpath = nil
-    configserver = configserver_nodes.collect{|n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['port']}" }.join(",")
+    configserver = configserver_nodes.collect{|n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['port']}" }.sort.join(",")
   end
 
   # default file
@@ -138,7 +138,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
     group node['mongodb']['root_group']
     owner "root"
     mode "0755"
-    variables :provides => name
+    variables :provides => name, :emits_pid => type != "mongos"
     notifies :restart, "service[#{name}]"
   end
 
