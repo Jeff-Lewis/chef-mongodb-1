@@ -21,7 +21,7 @@ package 'unzip'
 remote_file '/tmp/10gen-mms-agent.zip' do
   source 'https://mms.10gen.com/settings/10gen-mms-agent.zip'
   # irrelevant because of https://jira.mongodb.org/browse/MMSSUPPORT-2258
-  checksum node.mongodb.mms_agent.checksum
+  checksum node.mongodb.mms_agent.checksum if node.mongodb.mms_agent.key?(:checksum)
   notifies :run, "bash[unzip 10gen-mms-agent]", :immediately
 end
 bash 'unzip 10gen-mms-agent' do
@@ -38,8 +38,13 @@ bash 'unzip 10gen-mms-agent' do
       Digest::SHA256.hexdigest content
     end
     new_checksum = checksum_zip_contents('/tmp/10gen-mms-agent.zip')
-    Chef::Log.debug "new checksum = #{new_checksum}, expected = #{node.mongodb.mms_agent.checksum}"
-    !File.exist?("#{node.mongodb.mms_agent.install_dir}/settings.py") || new_checksum != node.mongodb.mms_agent.checksum
+    existing_checksum = node.mongodb.mms_agent.key?(:checksum) ? node.mongodb.mms_agent.checksum : 'NONE'
+    Chef::Log.debug "new checksum = #{new_checksum}, expected = #{existing_checksum}"
+
+    should_install = !File.exist?("#{node.mongodb.mms_agent.install_dir}/settings.py") || new_checksum != existing_checksum
+    # update the expected checksum in chef, for reference
+    node.default.mongodb.mms_agent.checksum = new_checksum
+    should_install
   }
 end
 
@@ -62,6 +67,8 @@ end
 # update settings.py and restart the agent if there were any key changes
 ruby_block 'modify settings.py' do
   block do
+    Chef::Log.warn "Found empty mms_agent.api_key or mms_agent.secret_key attributes" if node.mongodb.mms_agent.api_key.empty? || node.mongodb.mms_agent.secret_key.empty?
+
     orig_s = ''
     open("#{node.mongodb.mms_agent.install_dir}/mms-agent/settings.py") { |f|
       orig_s = f.read
@@ -75,6 +82,11 @@ ruby_block 'modify settings.py' do
       open("#{node.mongodb.mms_agent.install_dir}/mms-agent/settings.py", 'w') { |f|
         f.puts(s)
       }
+
+      # update the agent version in chef, for reference
+      /settingsAgentVersion = "(?<mms_agent_version>.*)"/ =~ s
+      node.default.mongodb.mms_agent.version = mms_agent_version
+
       notifies :enable, mms_agent_service, :delayed
       notifies :restart, mms_agent_service, :delayed
     end
