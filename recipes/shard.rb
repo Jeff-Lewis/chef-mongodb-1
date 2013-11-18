@@ -21,7 +21,11 @@
 
 include_recipe "mongodb::default"
 
-is_replicated = node.recipe?("mongodb::replicaset")
+replicaset_recipe = 'mongodb::replicaset'
+is_replicated = case Chef::Version.new(Chef::VERSION).major
+  when 0..10 then node.recipe?(replicaset_recipe)
+  else node.run_context.loaded_recipe?(replicaset_recipe)
+end
 
 
 # we are not starting the shard service with the --shardsvr

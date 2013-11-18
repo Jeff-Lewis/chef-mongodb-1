@@ -19,13 +19,6 @@
 # limitations under the License.
 #
 
-include_recipe "mongodb::mongo_gem"
-
-package node[:mongodb][:package_name] do
-  action :install
-  version node[:mongodb][:package_version]
-end
-
 include_recipe "mongodb::install"
 
 # Create keyFile if specified
