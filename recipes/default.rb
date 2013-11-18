@@ -21,36 +21,23 @@
 
 include_recipe "mongodb::mongo_gem"
 
-# provider "Chef::Provider::Service::Init::Debian" (which is what gets chosen automatically)
-# does not seem to respect service_name
-service "mongodb" do
-  action :nothing
-end
-
 package node[:mongodb][:package_name] do
   action :install
   version node[:mongodb][:package_version]
-  # the deb package automatically starts mongo, which breaks stuff. stop it,
-  # immediately, but only if something changed (i.e. install).
-  # only been tested on ubuntu 12.04 (and also might only be an issue there)
-  if platform_family?("debian")
-    notifies :stop, "service[mongodb]", :immediately
-    notifies :disable, "service[mongodb]", :immediately
-  end
 end
 
+include_recipe "mongodb::install"
 
 # Create keyFile if specified
-if node[:mongodb][:key_file]
-  file "/etc/mongodb.key" do
+if node[:mongodb][:key_file_content] then
+  file node[:mongodb][:config][:keyFile] do
     owner node[:mongodb][:user]
     group node[:mongodb][:group]
     mode  "0600"
     backup false
-    content node[:mongodb][:key_file]
+    content node[:mongodb][:key_file_content]
   end
 end
-
 
 # configure default instance IFF it's not supposed to be part of a clustered setup
 is_standalone = [

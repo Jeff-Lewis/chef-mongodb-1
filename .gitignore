@@ -2,3 +2,6 @@ build
 .kitchen/
 .kitchen.local.yml
 .vagrant
+metadata.json
+Berksfile.lock
+Gemfile.lock
