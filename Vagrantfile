@@ -26,6 +26,9 @@ Vagrant.configure("2") do |config|
         :mms_agent => {
           :api_key => "#{ENV['MMS_API_KEY']}",
           :secret_key => "#{ENV['MMS_SECRET_KEY']}",
+          :install_dir => "/opt/mongodb/mms-agent",
+          :install_munin => false,
+          :enable_munin => false
         }
       }
     }
@@ -35,7 +38,7 @@ Vagrant.configure("2") do |config|
     chef.run_list = [
       "recipe[mongodb::10gen_repo]",
       "recipe[mongodb::default]",
-      "recipe[mongodb::mms-agent]",
+      "recipe[mongodb::mms-agent]"
     ]
   end
 end
