@@ -63,7 +63,7 @@ For examples see the USAGE section below.
 * `mongodb[:mms_agent][:log_dir]` - Location to write the agent logfile. If this is a relative path, it's relative to where the service is run (via runit), e.g. set to './main'
 * `mongodb[:mms_agent][:install_munin]` - If enabled, installs the munin daemon.
 * `mongodb[:mms_agent][:munin_package]` - The name of the munin package to install (if enabled). The default is debian's package name 'munin-node'.
-* `mongodb[:mms_agent][:enable_munin]` - Enable mms agent integration with munin.
+* `mongodb[:mms_agent][:enable_munin]` - Enable MMS Agent integration with munin.
 
 # USAGE:
 
