@@ -27,7 +27,9 @@ remote_file "#{Chef::Config[:file_cache_path]}/mms-monitoring-agent.zip" do
   checksum node.mongodb.mms_agent.checksum if node.mongodb.mms_agent.key?(:checksum)
   notifies :run, "bash[unzip mms-monitoring-agent]", :immediately
 end
-directory "#{node.mongodb.mms_agent.install_dir}/.."
+directory "#{node.mongodb.mms_agent.install_dir}/.." do
+  recursive true
+end
 bash 'unzip mms-monitoring-agent' do
   code "rm -rf #{node.mongodb.mms_agent.install_dir} && unzip -o -d #{Pathname.new(node.mongodb.mms_agent.install_dir).parent} #{Chef::Config[:file_cache_path]}/mms-monitoring-agent.zip"
   action :nothing
