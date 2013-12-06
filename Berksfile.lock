@@ -4,10 +4,10 @@
       "path": "."
     },
     "apt": {
-      "locked_version": "2.1.1"
+      "locked_version": "2.3.0"
     },
     "python": {
-      "locked_version": "1.4.0"
+      "locked_version": "1.4.4"
     },
     "build-essential": {
       "locked_version": "1.4.0"
