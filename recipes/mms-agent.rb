@@ -82,12 +82,16 @@ ruby_block 'modify settings.py' do
       orig_s = f.read
     }
     s = orig_s
-    s = s.gsub(/mms_key = ".*"/, "mms_key = \"#{node.mongodb.mms_agent.api_key}\"")
-    s = s.gsub(/secret_key = ".*"/, "secret_key = \"#{node.mongodb.mms_agent.secret_key}\"")
+    s = s.gsub(/"@MMS_SERVER@"/, "\"https://mms.mongodb.com\"")
+    s = s.gsub(/"@API_KEY@"/, "\"#{node.mongodb.mms_agent.api_key}\"")
+    # appears to be removed as of 1.6.8
+    #s = s.gsub(/secret_key = ".*"/, "secret_key = \"#{node.mongodb.mms_agent.secret_key}\"")
+    # this only applies to intra-mongo cluster connections that are SSL'ed, which is disabled (requires a special build)
+    s = s.gsub(/@DEFAULT_REQUIRE_VALID_SERVER_CERTIFICATES@/, "False")
     # python uses True/False not true/false
     s = s.gsub(/enableMunin = .*/, "enableMunin = #{node.mongodb.mms_agent.enable_munin ? "True" : "False"}")
     if s != orig_s
-      Chef::Log.debug "Settings changed, overwriting and restarting service"
+      Chef::Log.info "Settings changed, overwriting and restarting service"
       open("#{node.mongodb.mms_agent.install_dir}/settings.py", 'w') { |f|
         f.puts(s)
       }
@@ -95,6 +99,7 @@ ruby_block 'modify settings.py' do
       # update the agent version in chef, for reference
       /settingsAgentVersion = "(?<mms_agent_version>.*)"/ =~ s
       node.default.mongodb.mms_agent.version = mms_agent_version
+      Chef::Log.info "Installed new version: #{mms_agent_version}."
 
       notifies :enable, mms_agent_service, :delayed
       notifies :restart, mms_agent_service, :delayed
