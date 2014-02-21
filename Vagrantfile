@@ -11,6 +11,8 @@ Vagrant.configure("2") do |config|
   config.omnibus.chef_version = :latest
   config.berkshelf.enabled = true
 
+  config.omnibus.chef_version = '11.8.2'
+
   config.vm.provider :virtualbox do |vb|
     vb.customize [ "modifyvm", :id, "--memory", "768" ]
   end
@@ -33,12 +35,15 @@ Vagrant.configure("2") do |config|
       }
     }
 
+    #chef.environment = 'vagrant'
     #chef.log_level = :debug
 
     chef.run_list = [
+      "recipe[apt::default]",
       "recipe[mongodb::10gen_repo]",
       "recipe[mongodb::default]",
-      "recipe[mongodb::mms-agent]"
+      #"recipe[mongodb::mms-agent]",
+      "recipe[mongodb::mms-backup]"
     ]
   end
 end
