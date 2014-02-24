@@ -11,6 +11,7 @@ dpkg_package "mongodb-mms-backup-agent" do
   action :install
 end
 
+# create a resource to the service
 service 'mongodb-mms-backup-agent' do
   supports [ :start, :stop, :restart, :reload ]
   # force upstart
@@ -19,16 +20,8 @@ service 'mongodb-mms-backup-agent' do
 end
 
 # configuration
-#mms_backup_creds = json_from_s3 do
-  #bucket 'kabam-chef-bucket'
-  #file 'TODO'
-#end
-mms_backup_creds = { 'api_key' => '570bbd67e931a0ede28b0ebc880f4167' }
-template '/etc/mongodb-mms/backup-agent.config' do
+template node[:mongodb][:mms_backup][:config_file] do
   source 'backup-agent.config.erb'
-  variables({ :api_key => mms_backup_creds['api_key'] })
+  variables({ :api_key => node[:mongodb][:mms_backup][:api_key] })
   notifies :restart, 'service[mongodb-mms-backup-agent]', :delayed
 end
-
-# /var/log/mongodb-mms/backup-agent.log
-Chef::Log.error 'wtf'
