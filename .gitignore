@@ -2,4 +2,3 @@ build
 .kitchen/
 .kitchen.local.yml
 .vagrant
-.bundle
