@@ -101,8 +101,14 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
       "logpath" => logfile,
       "dbpath" => dbpath,
       "replicaset_name" => replicaset_name,
-      "configsrv" => false, #type == "configserver", this might change the port
-      "shardsrv" => false,  #type == "shard", dito.
+      # http://docs.mongodb.org/manual/reference/program/mongod/#cmdoption--configsrv
+      # setting this enables the oplog for configservers, necessary for mms-backup
+      # the port is always explicitly set to 27017, regardless of type
+      "configsrv" => type == "configserver",
+      # according to http://docs.mongodb.org/manual/reference/program/mongod/#cmdoption--shardsvr
+      # --shardsrv doesn't do anything except change the port, which this
+      # cookbook always sets to 27017, regardless of type
+      "shardsrv" => false, #type == "shard"
       "nojournal" => nojournal,
       "enable_rest" => params[:enable_rest] && type != "mongos",
       "smallfiles" => params[:smallfiles]
