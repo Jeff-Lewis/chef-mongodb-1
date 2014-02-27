@@ -193,6 +193,18 @@ This cookbook also includes support for the
 [MongoDB Monitoring System (MMS)](https://mms.mongodb.com/) backup
 agent.
 
+Regarding security of the data, this is what is officially published:
+
+- [FAQ Entry: Is my data safe?](http://mms.mongodb.com/help/backup/faq/#is-my-data-safe)
+- [MMS Terms of Service](https://mms.mongodb.com/links/terms-of-service). Highlights (IANAL):
+  - #7: "You will be responsible for... [all legal requirements of the data you send]"
+  - #13: "... your content may be hosted by a third party service provider...",
+    and "may include a variety of industry-standard security technologies... to
+    help protect Your data"
+  - #20: "Any data... not removed...  within 90 calendar days following the
+    Termination Date will be deleted or rendered unreadable"
+
+
 # LICENSE and AUTHOR:
 
 Author:: Markus Korn <markus.korn@edelight.de>
