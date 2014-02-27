@@ -204,6 +204,11 @@ Regarding security of the data, this is what is officially published:
   - #20: "Any data... not removed...  within 90 calendar days following the
     Termination Date will be deleted or rendered unreadable"
 
+The same instructions as for the MMS agent: set your keys in
+`node['mongodb']['mms_backup']...`, then add the `mongodb::mms-backup` recipe
+to your run list. *Note that `mongodb::mms-agent` must be installed for the
+backup agent to work.*
+
 
 # LICENSE and AUTHOR:
 

@@ -1,13 +1,21 @@
+#
+# Cookbook Name:: mongodb
+# Recipe:: mms-agent
+#
+# Copyright 2011, Treasure Data, Inc.
+#
+# All rights reserved - Do Not Redistribute
+#
 include_recipe 'python'
 python_pip 'pymongo'
 
 # installation
-deb = 'mms_backup.deb'
-remote_file "#{Chef::Config[:file_cache_path]}/#{deb}" do
+deb_file = "#{Chef::Config[:file_cache_path]}/mms_backup.deb"
+remote_file deb_file do
   source node[:mongodb][:mms_backup][:install_url]
 end
 dpkg_package "mongodb-mms-backup-agent" do
-  source "#{Chef::Config[:file_cache_path]}/#{deb}"
+  source deb_file
   action :install
 end
 
