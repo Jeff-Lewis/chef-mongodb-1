@@ -30,6 +30,6 @@ end
 # configuration
 template node[:mongodb][:mms_backup][:config_file] do
   source 'backup-agent.config.erb'
-  variables({ :api_key => node[:mongodb][:mms_backup][:api_key] })
+  variables :api_key => node[:mongodb][:mms_backup][:api_key]
   notifies :restart, 'service[mongodb-mms-backup-agent]', :delayed
 end
