@@ -65,6 +65,10 @@ For examples see the USAGE section below.
 * `mongodb[:mms_agent][:munin_package]` - The name of the munin package to install (if enabled). The default is debian's package name 'munin-node'.
 * `mongodb[:mms_agent][:enable_munin]` - Enable MMS Agent integration with munin.
 * `mongodb[:mms_agent][:ignore_failure_on_install]` - Don't abort the chef run if there was a problem during install, e.g. downloading the archive
+* `mongodb[:mms_backup][:api_key]` - MMS Backup Agent API Key
+* `mongodb[:mms_backup][:install_url]` - The URL to download the installer from; the default is the debian/ubuntu package
+* `mongodb[:mms_backup][:config_file]` - The configuration file. This is NOT configurable, and is set to the value used by the debian package.
+* `mongodb[:mms_backup][:log_file]` - The log file for the agent. This is NOT configurable, and is set to the value used by the debian package.
 
 # USAGE:
 
@@ -167,8 +171,8 @@ For more details, you can find a [tutorial for Sharding + Replication](https://g
 
 ## MMS Agent
 
-This cookbook also includes support for
-{MongoDB Monitoring System (MMS)}[http://www.10gen.com/mongodb-monitoring-service]
+This cookbook also includes support for the
+[MongoDB Management System (MMS)](https://mms.mongodb.com/) monitoring
 agent. MMS is a hosted monitoring service, provided by 10gen, Inc. Once
 the small python agent program is installed on the MongoDB host, it
 automatically collects the metrics and upload them to the MMS server.
@@ -182,6 +186,29 @@ To setup MMS, simply set your keys in
 `node['mongodb']['mms_agent']['secret_key']`, then add the
 `mongodb::mms-agent` recipe to your run list. Your current keys should
 be available at your {MMS Settings page}[https://mms.10gen.com/settings].
+
+## MMS Backup Agent
+
+This cookbook also includes support for the
+[MongoDB Monitoring System (MMS)](https://mms.mongodb.com/) backup
+agent.
+
+Regarding security of the data, this is what is officially published:
+
+- [FAQ Entry: Is my data safe?](http://mms.mongodb.com/help/backup/faq/#is-my-data-safe)
+- [MMS Terms of Service](https://mms.mongodb.com/links/terms-of-service). Highlights (IANAL):
+  - #7: "You will be responsible for... [all legal requirements of the data you send]"
+  - #13: "... your content may be hosted by a third party service provider...",
+    and "may include a variety of industry-standard security technologies... to
+    help protect Your data"
+  - #20: "Any data... not removed...  within 90 calendar days following the
+    Termination Date will be deleted or rendered unreadable"
+
+The same instructions as for the MMS agent: set your keys in
+`node['mongodb']['mms_backup']...`, then add the `mongodb::mms-backup` recipe
+to your run list. *Note that `mongodb::mms-agent` must be installed for the
+backup agent to work.*
+
 
 # LICENSE and AUTHOR:
 
