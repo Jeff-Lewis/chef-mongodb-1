@@ -177,11 +177,12 @@ The graphs of these metrics are shown on the web page. It helps a lot
 for tackling MongoDB related problems, so MMS is the baseline for all
 production MongoDB deployments.
 
-
 To setup MMS, set your keys in `node['mongodb']['mms_agent']['api_key']` and
 then add the `mongodb::mms-agent` recipe to your run list. Your current keys
 should be available at your {MMS Settings
 page}[https://mms.10gen.com/settings].
+
+The agent can be uninstalled by using `recipe[mongodb::mms-agent-uninstall]`.
 
 ## MMS Backup Agent
 
@@ -205,6 +206,7 @@ The same instructions as for the MMS agent: set your keys in
 to your run list. *Note that `mongodb::mms-agent` must be installed for the
 backup agent to work.*
 
+The backup agent can be uninstalled by using `recipe[mongodb::mms-backup-uninstall]`.
 
 # LICENSE and AUTHOR:
 
