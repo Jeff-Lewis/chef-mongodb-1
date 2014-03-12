@@ -58,15 +58,14 @@ For examples see the USAGE section below.
 * `mongodb[:package_version]` - Version of the MongoDB package to install, default is nil
 * `mongodb[:replicaset_name]` - Define name of replicatset
 * `mongodb[:mms_agent][:api_key]` - MMS Agent API Key
-* `mongodb[:mms_agent][:secret_key]` - MMS Agent API Key
-* `mongodb[:mms_agent][:install_dir]` - Location to install the agent
-* `mongodb[:mms_agent][:log_dir]` - Location to write the agent logfile. If this is a relative path, it's relative to where the service is run (via runit), e.g. set to './main'
-* `mongodb[:mms_agent][:install_munin]` - If enabled, installs the munin daemon.
-* `mongodb[:mms_agent][:munin_package]` - The name of the munin package to install (if enabled). The default is debian's package name 'munin-node'.
+* `mongodb[:mms_agent][:version]` - The version of the monitoring agent to install.
+* `mongodb[:mms_agent][:install_url]` - The URL to download the installer from; the default is the debian/ubuntu package.
+* `mongodb[:mms_backup][:config_file]` - The configuration file. This is NOT configurable, and is set to the value used by the debian package.
+* `mongodb[:mms_agent][:log_file]` - The log file for the agent. This is NOT configurable, and is set to the value used by the debian package.
 * `mongodb[:mms_agent][:enable_munin]` - Enable MMS Agent integration with munin.
-* `mongodb[:mms_agent][:ignore_failure_on_install]` - Don't abort the chef run if there was a problem during install, e.g. downloading the archive
 * `mongodb[:mms_backup][:api_key]` - MMS Backup Agent API Key
-* `mongodb[:mms_backup][:install_url]` - The URL to download the installer from; the default is the debian/ubuntu package
+* `mongodb[:mms_backup][:version]` - The version of the backup agent to install.
+* `mongodb[:mms_backup][:install_url]` - The URL to download the installer from; the default is the debian/ubuntu package.
 * `mongodb[:mms_backup][:config_file]` - The configuration file. This is NOT configurable, and is set to the value used by the debian package.
 * `mongodb[:mms_backup][:log_file]` - The log file for the agent. This is NOT configurable, and is set to the value used by the debian package.
 
@@ -180,12 +179,12 @@ The graphs of these metrics are shown on the web page. It helps a lot
 for tackling MongoDB related problems, so MMS is the baseline for all
 production MongoDB deployments.
 
+To setup MMS, set your keys in `node['mongodb']['mms_agent']['api_key']` and
+then add the `mongodb::mms-agent` recipe to your run list. Your current keys
+should be available at your [MMS Settings
+page](https://mms.10gen.com/settings).
 
-To setup MMS, simply set your keys in
-`node['mongodb']['mms_agent']['api_key']` and
-`node['mongodb']['mms_agent']['secret_key']`, then add the
-`mongodb::mms-agent` recipe to your run list. Your current keys should
-be available at your {MMS Settings page}[https://mms.10gen.com/settings].
+The agent can be uninstalled by using `recipe[mongodb::mms-agent-uninstall]`.
 
 ## MMS Backup Agent
 
@@ -205,10 +204,11 @@ Regarding security of the data, this is what is officially published:
     Termination Date will be deleted or rendered unreadable"
 
 The same instructions as for the MMS agent: set your keys in
-`node['mongodb']['mms_backup']...`, then add the `mongodb::mms-backup` recipe
+`node['mongodb']['mms_backup']['api_key']`, then add the `mongodb::mms-backup` recipe
 to your run list. *Note that `mongodb::mms-agent` must be installed for the
 backup agent to work.*
 
+The backup agent can be uninstalled by using `recipe[mongodb::mms-backup-uninstall]`.
 
 # LICENSE and AUTHOR:
 

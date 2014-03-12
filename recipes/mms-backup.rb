@@ -6,6 +6,7 @@
 #
 # All rights reserved - Do Not Redistribute
 #
+include_recipe 'apt'
 include_recipe 'python'
 python_pip 'pymongo'
 
@@ -17,11 +18,12 @@ end
 dpkg_package "mongodb-mms-backup-agent" do
   source deb_file
   action :install
+  version node[:mongodb][:mms_backup][:version]
 end
 
 # create a resource to the service
 service 'mongodb-mms-backup-agent' do
-  supports [ :start, :stop, :restart, :reload ]
+  supports [ :enable, :disable, :start, :stop, :restart, :reload ]
   # force upstart
   provider Chef::Provider::Service::Upstart
   action :nothing
@@ -31,5 +33,6 @@ end
 template node[:mongodb][:mms_backup][:config_file] do
   source 'backup-agent.config.erb'
   variables :api_key => node[:mongodb][:mms_backup][:api_key]
+  notifies :enable, 'service[mongodb-mms-backup-agent]', :delayed
   notifies :restart, 'service[mongodb-mms-backup-agent]', :delayed
 end
