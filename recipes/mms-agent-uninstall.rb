@@ -7,10 +7,6 @@
 # All rights reserved - Do Not Redistribute
 #
 
-# create a resource to the service
-service 'mongodb-mms-monitoring-agent' do
-  supports [ :enable, :disable, :start, :stop, :restart, :reload ]
-  # force upstart
-  provider Chef::Provider::Service::Upstart
-  action [ :stop, :disable ]
+dpkg_package 'mongodb-mms-monitoring-agent' do
+  action :purge
 end
