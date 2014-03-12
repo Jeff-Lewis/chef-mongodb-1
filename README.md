@@ -179,8 +179,8 @@ production MongoDB deployments.
 
 To setup MMS, set your keys in `node['mongodb']['mms_agent']['api_key']` and
 then add the `mongodb::mms-agent` recipe to your run list. Your current keys
-should be available at your {MMS Settings
-page}[https://mms.10gen.com/settings].
+should be available at your [MMS Settings
+page](https://mms.10gen.com/settings).
 
 The agent can be uninstalled by using `recipe[mongodb::mms-agent-uninstall]`.
 
