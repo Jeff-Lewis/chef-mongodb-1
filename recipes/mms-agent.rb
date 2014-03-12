@@ -22,7 +22,7 @@ end
 
 # create a resource to the service
 service 'mongodb-mms-monitoring-agent' do
-  supports [ :start, :stop, :restart, :reload ]
+  supports [ :enable, :disable, :start, :stop, :restart, :reload ]
   # force upstart
   provider Chef::Provider::Service::Upstart
   action :nothing
@@ -35,5 +35,6 @@ template node[:mongodb][:mms_agent][:config_file] do
     :api_key => node[:mongodb][:mms_agent][:api_key],
     :enable_munin => node[:mongodb][:mms_agent][:enable_munin],
   })
+  notifies :enable, 'service[mongodb-mms-monitoring-agent]', :delayed
   notifies :restart, 'service[mongodb-mms-monitoring-agent]', :delayed
 end
