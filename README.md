@@ -58,12 +58,14 @@ For examples see the USAGE section below.
 * `mongodb[:package_version]` - Version of the MongoDB package to install, default is nil
 * `mongodb[:replicaset_name]` - Define name of replicatset
 * `mongodb[:mms_agent][:api_key]` - MMS Agent API Key
-* `mongodb[:mms_agent][:install_url]` - The URL to download the installer from; the default is the debian/ubuntu package
+* `mongodb[:mms_agent][:version]` - The version of the monitoring agent to install.
+* `mongodb[:mms_agent][:install_url]` - The URL to download the installer from; the default is the debian/ubuntu package.
 * `mongodb[:mms_backup][:config_file]` - The configuration file. This is NOT configurable, and is set to the value used by the debian package.
 * `mongodb[:mms_agent][:log_file]` - The log file for the agent. This is NOT configurable, and is set to the value used by the debian package.
 * `mongodb[:mms_agent][:enable_munin]` - Enable MMS Agent integration with munin.
 * `mongodb[:mms_backup][:api_key]` - MMS Backup Agent API Key
-* `mongodb[:mms_backup][:install_url]` - The URL to download the installer from; the default is the debian/ubuntu package
+* `mongodb[:mms_backup][:version]` - The version of the backup agent to install.
+* `mongodb[:mms_backup][:install_url]` - The URL to download the installer from; the default is the debian/ubuntu package.
 * `mongodb[:mms_backup][:config_file]` - The configuration file. This is NOT configurable, and is set to the value used by the debian package.
 * `mongodb[:mms_backup][:log_file]` - The log file for the agent. This is NOT configurable, and is set to the value used by the debian package.
 

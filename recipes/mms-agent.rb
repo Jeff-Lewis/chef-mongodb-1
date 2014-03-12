@@ -18,6 +18,7 @@ end
 dpkg_package "mongodb-mms-monitoring-agent" do
   source deb_file
   action :install
+  version node[:mongodb][:mms_agent][:version]
 end
 
 # create a resource to the service

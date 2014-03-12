@@ -38,10 +38,10 @@ Vagrant.configure("2") do |config|
     chef.run_list = [
       "recipe[mongodb::10gen_repo]",
       "recipe[mongodb::default]",
-      #"recipe[mongodb::mms-agent]",
-      #"recipe[mongodb::mms-backup]"
-      "recipe[mongodb::mms-agent-uninstall]",
-      "recipe[mongodb::mms-backup-uninstall]"
+      "recipe[mongodb::mms-agent]",
+      "recipe[mongodb::mms-backup]"
+      #"recipe[mongodb::mms-agent-uninstall]",
+      #"recipe[mongodb::mms-backup-uninstall]"
     ]
   end
 end

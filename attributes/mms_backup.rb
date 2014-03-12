@@ -1,6 +1,7 @@
 default[:mongodb][:mms_backup][:api_key] = ""
 
-default[:mongodb][:mms_backup][:install_url] = "https://mms.mongodb.com/download/agent/backup/mongodb-mms-backup-agent_1.4.3.28-1_amd64.deb"
+default[:mongodb][:mms_backup][:version] = "1.4.3.28"
+default[:mongodb][:mms_backup][:install_url] = "https://mms.mongodb.com/download/agent/backup/mongodb-mms-backup-agent_#{node[:mongodb][:mms_backup][:version]}-1_amd64.deb"
 
 # the following are not configurable (they come from the .deb installer), but
 # listed here for reference

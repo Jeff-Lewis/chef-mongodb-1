@@ -18,6 +18,7 @@ end
 dpkg_package "mongodb-mms-backup-agent" do
   source deb_file
   action :install
+  version node[:mongodb][:mms_backup][:version]
 end
 
 # create a resource to the service
