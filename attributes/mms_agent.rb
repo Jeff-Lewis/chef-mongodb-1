@@ -1,6 +1,6 @@
 default[:mongodb][:mms_agent][:api_key] = ""
 
-default[:mongodb][:mms_agent][:version] = "2.1.0.35"
+default[:mongodb][:mms_agent][:version] = "2.1.2.43"
 default[:mongodb][:mms_agent][:install_url] = "https://mms.mongodb.com/download/agent/monitoring/mongodb-mms-monitoring-agent_#{node[:mongodb][:mms_agent][:version]}-1_amd64.deb"
 
 # the following are not configurable (they come from the .deb installer), but
