@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: mongodb
-# Recipe:: mms-agent
+# Recipe:: mms-backup
 #
 # Copyright 2011, Treasure Data, Inc.
 #
@@ -12,11 +12,14 @@ python_pip 'pymongo'
 
 # installation
 deb_file = "#{Chef::Config[:file_cache_path]}/mms_backup.deb"
+package_opts = '--force-confold' # do not modify the current configuration file
+
 remote_file deb_file do
   source node[:mongodb][:mms_backup][:install_url]
 end
 dpkg_package "mongodb-mms-backup-agent" do
   source deb_file
+  options package_opts
   action :install
   version node[:mongodb][:mms_backup][:version]
 end
