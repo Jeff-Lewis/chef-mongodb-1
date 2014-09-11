@@ -17,7 +17,7 @@ package_opts = '--force-confold' # do not modify the current configuration file
 remote_file deb_file do
   source node[:mongodb][:mms_backup][:install_url]
 end
-dpkg_package "mongodb-mms-backup-agent" do
+package "mongodb-mms-backup-agent" do
   source deb_file
   options package_opts
   action :install
