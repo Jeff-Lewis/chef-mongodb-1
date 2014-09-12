@@ -151,6 +151,7 @@ GEM
     rspec-expectations (3.1.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.1.0)
+    rspec-extra-formatters (1.0.0)
     rspec-mocks (3.1.0)
       rspec-support (~> 3.1.0)
     rspec-support (3.1.0)
@@ -185,4 +186,5 @@ DEPENDENCIES
   berkshelf (~> 3.1)
   chefspec (~> 4.0)
   kitchen-vagrant (~> 0.14)
+  rspec-extra-formatters
   test-kitchen (~> 1.2)
