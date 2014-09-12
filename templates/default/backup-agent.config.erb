@@ -1,8 +1,7 @@
 #
-# REQUIRED
-# Enter your API key - It can be found at https://api-backup.mongodb.com/settings
+# Enter your API key - It can be found at https://mms.mongodb.com/settings
 #
-apiKey=<%= @api_key %>
+mmsApiKey=<%= @api_key %>
 
 #
 # Hostname of the MMS Backup web server.
@@ -14,18 +13,5 @@ mothership=api-backup.mongodb.com
 #
 https=true
 
-#
-# Required only if connecting to MongoDBs running
-# with SSL.
-#
-# `sslTrustedServerCertificates` is path on disk that contains the trusted certificate
-# authority certificates in PEM format. The certificates will be used to verify
-# the server certificate returned from any MongoDBs running with SSL.
-#
-# Certificate verification can be turned off by changing the `sslRequireValidServerCertificates`
-# field to false. That configuration is only recommended for testing purposes
-# as it makes connections suspectiable to MITM attacks.
-#
-sslTrustedServerCertificates=
-sslRequireValidServerCertificates=true
-
+# For additional optional settings, please see
+# https://mms.mongodb.com/help/reference/backup-agent

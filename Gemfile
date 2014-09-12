@@ -1,9 +1,12 @@
 source 'https://rubygems.org'
 
-# gem 'berkshelf' # use head until stable includes lockfile 2.0 support
-gem 'berkshelf', '>= 2'
+gem 'berkshelf', '~>3.1'
 
+# chefspec
+gem 'chefspec', '~>4.0'
+
+# test kitchen
 group :integration do
-  gem 'kitchen-vagrant', :github => 'opscode/kitchen-vagrant'
-  gem 'test-kitchen', :github => 'opscode/test-kitchen'
+    gem 'test-kitchen',    '~> 1.2'
+    gem 'kitchen-vagrant', '~> 0.14'
 end

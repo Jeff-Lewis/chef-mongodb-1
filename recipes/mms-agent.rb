@@ -15,7 +15,7 @@ deb_file = "#{Chef::Config[:file_cache_path]}/mms_agent.deb"
 remote_file deb_file do
   source node[:mongodb][:mms_agent][:install_url]
 end
-dpkg_package "mongodb-mms-monitoring-agent" do
+package "mongodb-mms-monitoring-agent" do
   source deb_file
   action :install
   version node[:mongodb][:mms_agent][:version]
