@@ -10,7 +10,6 @@ describe 'mongodb::mms-backup' do
   end
 
   it 'package install the mms_backup_agent' do
-    # chef_run.node.override.mongodb.mms_backup.api_key = 'dummykey'
     chef_run.converge(described_recipe)
     expect(chef_run).to include_recipe('mongodb::mms-backup')
     expect(chef_run).to install_package('mongodb-mms-backup-agent')
