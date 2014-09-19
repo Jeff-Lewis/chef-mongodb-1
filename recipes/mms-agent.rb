@@ -12,11 +12,14 @@ python_pip 'pymongo'
 
 # installation
 deb_file = "#{Chef::Config[:file_cache_path]}/mms_agent.deb"
+package_opts = '--force-confold' # do not modify the current configuration file
+
 remote_file deb_file do
   source node[:mongodb][:mms_agent][:install_url]
 end
 package "mongodb-mms-monitoring-agent" do
   source deb_file
+  options package_opts
   action :install
   version node[:mongodb][:mms_agent][:version]
 end
