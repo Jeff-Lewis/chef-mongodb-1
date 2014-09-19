@@ -6,7 +6,7 @@ DEPENDENCIES
 GRAPH
   apt (2.6.0)
   build-essential (2.0.6)
-  mongodb (0.987654321.12)
+  mongodb (0.987654321.14)
     apt (>= 1.8.2)
     python (>= 0.0.0)
     runit (>= 1.1.6)
