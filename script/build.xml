@@ -1,0 +1,10 @@
+<project name="Chef-Mongodb" basedir="..">
+  <description>Format Jenkins Report</description>
+
+  <junitreport todir="script">
+    <fileset dir=".">
+      <include name="**/build/tests/rspec-report.xml"/>
+    </fileset>
+  </junitreport>
+
+</project>

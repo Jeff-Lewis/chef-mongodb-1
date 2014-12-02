@@ -5,6 +5,7 @@ gem 'berkshelf', '~>3.1'
 # chefspec
 gem 'chefspec', '~>4.0'
 gem 'rspec-extra-formatters'
+gem 'rspec-legacy_formatters'
 
 # test kitchen
 group :integration do

@@ -1,5 +1,8 @@
-build
 .kitchen/
 .kitchen.local.yml
 .vagrant
 .bundle
+
+# chefspec
+build/*
+TESTS-TestSuites.xml
