@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+set -o pipefail
+# set -x # print command traces for debugging
+
+# if running outside of jenkins
+if [[ -z "${WORKSPACE+x}" ]]; then
+  echo "Looks like you're running this without Jenkins; this must be run from the project root, like \`script/cibuild\`"
+  WORKSPACE=${PWD}
+fi
+
+# check dependencies
+RVM_SOURCE=${HOME}/.rvm/scripts/rvm
+if [[ ! -f ${RVM_SOURCE} ]]; then
+  echo "requires rvm, but can't find it"
+  exit 1
+fi
+if [[ -z `which ant` ]]; then # for error reports for jenkins
+  echo "requires ant, but can't find it"
+  exit 1
+fi
+
+OUT_REPORT="build/tests/rspec-report.xml"
+SPEC_OPTS="spec/*_spec.rb --no-drb -r rspec/legacy_formatters -r rspec-extra-formatters --format documentation --format JUnitFormatter --out ${OUT_REPORT}"
+
+# load rvm
+source ${RVM_SOURCE}
+
+# install cookbook dependencies (always use the local ruby version)
+echo "Setting Up Cookbook Dependencies ***************************************"
+setup_successful=0
+RUBY_VERSION="$(cat .ruby-version)"
+RUBY_GEMSET="$(cat .ruby-gemset)"
+echo ""
+echo "Seting Up RVM **********************************************************"
+rvm --create use ${RUBY_VERSION}@${RUBY_GEMSET}
+result=$?; if [[ ${result} -ne 0 ]]; then setup_successful=${result}; fi
+rvm install ${RUBY_VERSION}
+result=$?; if [[ ${result} -ne 0 ]]; then setup_successful=${result}; fi
+echo ""
+echo "Bundle install *********************************************************"
+bundle install
+result=$?; if [[ ${result} -ne 0 ]]; then setup_successful=${result}; fi
+echo ""
+echo "Setting Up Berkshelf ***************************************************"
+berks install
+result=$?; if [[ ${result} -ne 0 ]]; then setup_successful=${result}; fi
+
+# stop early if there were setup issues
+if [[ ${setup_successful} -ne 0 ]]; then
+  echo "ERROR during rvm setup: chef-mongodb"
+  exit ${setup_successful}
+fi
+
+echo ""
+echo "Testing MongoDB Cookbook ***********************************************"
+successful=0
+if [[ -d spec ]]; then
+  rspec ${SPEC_OPTS}
+  result=$?; if [[ ${result} -ne 0 ]]; then successful=${result}; fi
+else
+  echo "No tests found."
+fi
+
+# Make report for jenkins - final output file will be ${WORKSPACE}/script/TESTS-TestSuites.xml
+echo ""
+echo "Preparing Report  ******************************************************"
+pushd ${WORKSPACE}/script
+  ant
+popd
+
+exit ${successful}

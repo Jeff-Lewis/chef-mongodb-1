@@ -12,15 +12,16 @@ python_pip 'pymongo'
 
 # installation
 deb_file = "#{Chef::Config[:file_cache_path]}/mms_backup.deb"
-package_opts = '--force-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"' # do not modify the current configuration file
+provider = Chef::Provider::Package::Dpkg
+package_opts = '--force-confold' # do not modify the current configuration file
 
 remote_file deb_file do
   source node[:mongodb][:mms_backup][:install_url]
 end
 package "mongodb-mms-backup-agent" do
   source deb_file
+  provider provider
   options package_opts
-  action :install
   version node[:mongodb][:mms_backup][:version]
 end
 
