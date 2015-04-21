@@ -168,7 +168,7 @@ nodes which should be in the same replicaset have the same shard name.
 
 For more details, you can find a [tutorial for Sharding + Replication](https://github.com/edelight/chef-mongodb/wiki/MongoDB%3A-Replication%2BSharding) in the wiki.
 
-## MMS Agent
+## MMS Agent [Changelog](https://docs.mms.mongodb.com/release-notes/backup-agent/)
 
 This cookbook also includes support for the
 [MongoDB Management System (MMS)](https://mms.mongodb.com/) monitoring
@@ -186,7 +186,7 @@ page](https://mms.10gen.com/settings).
 
 The agent can be uninstalled by using `recipe[mongodb::mms-agent-uninstall]`.
 
-## MMS Backup Agent
+## MMS Backup Agent [Changelog](https://docs.mms.mongodb.com/release-notes/monitoring-agent/)
 
 This cookbook also includes support for the
 [MongoDB Monitoring System (MMS)](https://mms.mongodb.com/) backup
