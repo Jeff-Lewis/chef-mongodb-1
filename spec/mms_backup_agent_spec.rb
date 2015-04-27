@@ -13,9 +13,9 @@ describe 'mongodb::mms-backup' do
   it 'package install the mms_backup_agent' do
     chef_run.converge(described_recipe)
     expect(chef_run).to include_recipe('mongodb::mms-backup')
-    expect(chef_run).to install_package('mongodb-mms-backup-agent').with_version('2.8.0.204-1')
+    expect(chef_run).to install_package('mongodb-mms-backup-agent').with_version('3.3.0.261-1')
     expect(chef_run).to create_remote_file("#{Chef::Config[:file_cache_path]}/mms_backup.deb").with(
-      :source => 'https://mms.mongodb.com/download/agent/backup/mongodb-mms-backup-agent_2.8.0.204-1_amd64.deb'
+      :source => 'https://mms.mongodb.com/download/agent/backup/mongodb-mms-backup-agent_3.3.0.261-1_amd64.deb'
     )
     expect(chef_run).to render_file('/etc/mongodb-mms/backup-agent.config').with_content(/.*=dummy_key/)
     resource = chef_run.template('/etc/mongodb-mms/backup-agent.config')
