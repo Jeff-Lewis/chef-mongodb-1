@@ -30,6 +30,9 @@ end
 package node[:mongodb][:package_name] do
   action :install
   version node[:mongodb][:package_version]
+  unless node[:mongodb][:package_timeout].nil?
+    timeout node[:mongodb][:package_timeout]
+  end
   # the deb package automatically starts mongo, which breaks stuff. stop it,
   # immediately, but only if something changed (i.e. install).
   # only been tested on ubuntu 12.04 (and also might only be an issue there)

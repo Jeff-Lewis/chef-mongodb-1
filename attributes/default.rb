@@ -91,6 +91,7 @@ else
 end
 
 default[:mongodb][:package_version] = nil
+default[:mongodb][:package_timeout] = 3600 # TODO: Default to `nil` and set this from environments.
 default[:mongodb][:nojournal] = false
 default[:mongodb][:template_cookbook] = "mongodb"
 default[:mongodb][:oplog_size] = nil
