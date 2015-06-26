@@ -35,7 +35,7 @@ remote_file "#{Chef::Config[:file_cache_path]}/mongodb-10gen.deb" do
 end
 
 package node[:mongodb][:package_name] do
-  if node[:mongodb][:package_source]
+  if node[:mongodb].attribute?(:package_source)
     action :nothing
     source "#{Chef::Config[:file_cache_path]}/mongodb-10gen.deb"
   else
