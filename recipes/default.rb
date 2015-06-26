@@ -27,15 +27,27 @@ service "mongodb" do
   action :nothing
 end
 
+# Include :package_source attribute to download from an alternate location
+remote_file "#{Chef::Config[:file_cache_path]}/mongodb-10gen.deb" do
+  source node[:mongodb][:package_source]
+  notifies :install, "package[#{node[:mongodb][:package_name]}]", :immediately
+  only_if { node[:mongodb].attribute?(:package_source) }
+end
+
 package node[:mongodb][:package_name] do
-  action :install
-  version node[:mongodb][:package_version]
-  # the deb package automatically starts mongo, which breaks stuff. stop it,
-  # immediately, but only if something changed (i.e. install).
-  # only been tested on ubuntu 12.04 (and also might only be an issue there)
-  if platform_family?("debian")
-    notifies :stop, "service[mongodb]", :immediately
-    notifies :disable, "service[mongodb]", :immediately
+  if node[:mongodb][:package_source]
+    action :nothing
+    source "#{Chef::Config[:file_cache_path]}/mongodb-10gen.deb"
+  else
+    action :install
+    version node[:mongodb][:package_version]
+    # the deb package automatically starts mongo, which breaks stuff. stop it,
+    # immediately, but only if something changed (i.e. install).
+    # only been tested on ubuntu 12.04 (and also might only be an issue there)
+    if platform_family?("debian")
+      notifies :stop, "service[mongodb]", :immediately
+      notifies :disable, "service[mongodb]", :immediately
+    end
   end
 end
 
