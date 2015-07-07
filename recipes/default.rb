@@ -27,17 +27,18 @@ service "mongodb" do
   action :nothing
 end
 
-# Include :install_url attribute to download from an alternate location
-remote_file "#{Chef::Config[:file_cache_path]}/mongodb-10gen.deb" do
-  source node[:mongodb][:install_url]
-  notifies :install, "package[#{node[:mongodb][:package_name]}]", :immediately
-  not_if { node[:mongodb][:install_url].nil? }
+if node[:mongodb][:install_url]
+  # Include :install_url attribute to download from an alternate location
+  remote_file "#{Chef::Config[:file_cache_path]}/mongodb-10gen.deb" do
+    source node[:mongodb][:install_url]
+    notifies :install, "package[#{node[:mongodb][:package_name]}]", :immediately
+  end
 end
 
 package node[:mongodb][:package_name] do
   if node[:mongodb][:install_url].nil?
     action :install
-    version node[:mongodb][:package_version]
+    version node[:mongodb][:package_version] # FIXME: Should this be pulled out of conditional?
   else
     # With a custom install URL, the download task will notify this task when to run
     action :nothing
