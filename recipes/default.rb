@@ -38,11 +38,11 @@ end
 package node[:mongodb][:package_name] do
   version node[:mongodb][:package_version]
   if node[:mongodb][:install_url]
-    action :install
-  else
     # With a custom install URL, the download task will notify this task when to run
     action :nothing
     source "#{Chef::Config[:file_cache_path]}/mongodb-10gen.deb"
+  else
+    action :install
   end
   
   # the deb package automatically starts mongo, which breaks stuff. stop it,
