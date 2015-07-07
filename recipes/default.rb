@@ -36,9 +36,9 @@ if node[:mongodb][:install_url]
 end
 
 package node[:mongodb][:package_name] do
+  version node[:mongodb][:package_version]
   if node[:mongodb][:install_url].nil?
     action :install
-    version node[:mongodb][:package_version] # FIXME: Should this be pulled out of conditional?
   else
     # With a custom install URL, the download task will notify this task when to run
     action :nothing
