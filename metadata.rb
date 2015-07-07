@@ -11,7 +11,8 @@ recipe "mongodb::mongos", "Installs and configures a mongos which can be used in
 recipe "mongodb::configserver", "Installs and configures a configserver for mongodb sharding"
 recipe "mongodb::shard", "Installs and configures a single shard"
 recipe "mongodb::replicaset", "Installs and configures a mongodb replicaset"
-recipe "mongodb::mms-agent", "Installs and configures a Mongo Management Service agent"
+recipe "mongodb::mms-agent", "Installs and configures a Mongo Management Service monitoring agent"
+recipe "mongodb::mms-backup", "Installs and configures a Mongo Management Service backup agent"
 
 depends "apt", "2.6.1"
 depends 'build-essential', '~> 2.1.0' # This is a dependency of apt

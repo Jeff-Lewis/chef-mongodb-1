@@ -36,7 +36,11 @@ if node[:mongodb][:install_url]
 end
 
 package node[:mongodb][:package_name] do
+  # `package_version` needs to be set whether install_url is nil or not.
+  # Without it, the resource will try to figure out version by looking up package name.
+  # If version doesn't match `source` file, it's ignored and new package is downloaded.
   version node[:mongodb][:package_version]
+
   if node[:mongodb][:install_url]
     # With a custom install URL, the download task will notify this task when to run
     action :nothing
@@ -45,9 +49,9 @@ package node[:mongodb][:package_name] do
     action :install
   end
   
-  # the deb package automatically starts mongo, which breaks stuff. stop it,
-  # immediately, but only if something changed (i.e. install).
-  # only been tested on ubuntu 12.04 (and also might only be an issue there)
+  # The deb package automatically starts mongo, which breaks stuff.
+  # Stop it immediately, but only if something changed (i.e. install).
+  # Only been tested on ubuntu 12.04 (and also might only be an issue there).
   if platform_family?("debian")
     notifies :stop, "service[mongodb]", :immediately
     notifies :disable, "service[mongodb]", :immediately

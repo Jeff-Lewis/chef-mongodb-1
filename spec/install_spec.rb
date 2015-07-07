@@ -9,22 +9,27 @@ describe 'mongodb::default' do
   end
 
   it 'should install mongodb package and enable mongodb service' do
-    chef_run.node.set.mongodb.package_version = "2.4.9"
+    expected_version = "#{rand(10)}.#{rand(10)}.#{rand(10)}"
+    chef_run.node.set.mongodb.package_version = expected_version
 
     chef_run.converge(described_recipe)
-    expect(chef_run).to install_package('mongodb-10gen').with_version("2.4.9")
+    expect(chef_run).to install_package('mongodb-10gen').with_version(expected_version)
     expect(chef_run).to enable_service 'mongodb'
   end
 
   it 'if install_url is specified, it should create mongodb-10gen.deb file and notify mongodb pkg install' do
-    chef_run.node.set.mongodb.install_url = "http://example.com/mongodb-10gen_2.4.9_amd64.deb"
+    expected_version = "#{rand(10)}.#{rand(10)}.#{rand(10)}"
     remote_file = "#{Chef::Config[:file_cache_path]}/mongodb-10gen.deb"
+    install_url = "http://example.com/mongodb-10gen_2.4.9_amd64.deb"
+    chef_run.node.set.mongodb.install_url = install_url
+    chef_run.node.set.mongodb.package_version = expected_version
 
     chef_run.converge(described_recipe)
-    expect(chef_run).to create_remote_file(remote_file).with(source: "http://example.com/mongodb-10gen_2.4.9_amd64.deb")
+    expect(chef_run).to create_remote_file(remote_file).with(source: install_url)
     resource = chef_run.remote_file(remote_file)
     expect(resource).to notify('package[mongodb-10gen]').to(:install).immediately
-    # expect(chef_run).to install_package('mongodb-10gen').with_version("2.4.9").at_converge_time # FIXME: This does not work
+    expect(chef_run.package('mongodb-10gen').version).to eq expected_version
+    # expect(chef_run).to install_package('mongodb-10gen').with_version(expected_version).at_converge_time # FIXME: This does not work
     # expect(chef_run).to enable_service 'mongodb' # FIXME: This is true but need to look into why it works
   end
 
