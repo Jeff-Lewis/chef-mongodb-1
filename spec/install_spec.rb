@@ -14,7 +14,6 @@ describe 'mongodb::default' do
 
     chef_run.converge(described_recipe)
     expect(chef_run).to install_package('mongodb-10gen').with_version(expected_version)
-    expect(chef_run).to enable_service 'mongodb'
   end
 
   it 'if install_url is specified, it should create mongodb-10gen.deb file and notify mongodb pkg install' do
@@ -31,6 +30,13 @@ describe 'mongodb::default' do
     expect(chef_run.package('mongodb-10gen').version).to eq expected_version
     # expect(chef_run).to install_package('mongodb-10gen').with_version(expected_version).at_converge_time # FIXME: This does not work
     # expect(chef_run).to enable_service 'mongodb' # FIXME: This is true but need to look into why it works
+  end
+
+  # TODO: This is currently true in the above tests but appears to be a side
+  #       effect or bug and not really prove something useful happened
+  xit 'the mongodb service is enabled' do 
+    chef_run.converge(described_recipe)
+    expect(chef_run).to enable_service 'mongodb'
   end
 
 end
