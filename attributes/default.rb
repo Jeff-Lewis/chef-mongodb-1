@@ -91,7 +91,7 @@ else
 end
 
 default[:mongodb][:install_url] = nil
-default[:mongodb][:package_version] = nil
+default[:mongodb][:package_version] = nil # must match the package file's version if a custom install_url is set
 default[:mongodb][:nojournal] = false
 default[:mongodb][:template_cookbook] = "mongodb"
 default[:mongodb][:oplog_size] = nil
