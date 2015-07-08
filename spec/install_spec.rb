@@ -28,8 +28,6 @@ describe 'mongodb::default' do
     resource = chef_run.remote_file(remote_file)
     expect(resource).to notify('package[mongodb-10gen]').to(:install).immediately
     expect(chef_run.package('mongodb-10gen').version).to eq expected_version
-    # expect(chef_run).to install_package('mongodb-10gen').with_version(expected_version).at_converge_time # FIXME: This does not work
-    # expect(chef_run).to enable_service 'mongodb' # FIXME: This is true but need to look into why it works
   end
 
   # TODO: This is currently true in the above tests but appears to be a side
