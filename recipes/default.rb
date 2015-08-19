@@ -31,33 +31,27 @@ if node[:mongodb][:install_url]
   # Include :install_url attribute to download from an alternate location
   remote_file "#{Chef::Config[:file_cache_path]}/mongodb-10gen.deb" do
     source node[:mongodb][:install_url]
-    notifies :install, "package[#{node[:mongodb][:package_name]}]", :immediately
   end
-end
-
-package node[:mongodb][:package_name] do
-  # `package_version` needs to be set whether install_url is nil or not.
-  # Without it, the resource will try to figure out version by looking up package name.
-  # If version doesn't match `source` file, it's ignored and new package is downloaded.
-  version node[:mongodb][:package_version]
-
-  if node[:mongodb][:install_url]
-    # With a custom install URL, the download task will notify this task when to run
-    action :nothing
-    source "#{Chef::Config[:file_cache_path]}/mongodb-10gen.deb"
-  else
+  dpkg_package 'mongodb-10gen' do
     action :install
+    source "#{Chef::Config[:file_cache_path]}/mongodb-10gen.deb"
+    version node[:mongodb][:package_version]
   end
-  
-  # The deb package automatically starts mongo, which breaks stuff.
-  # Stop it immediately, but only if something changed (i.e. install).
-  # Only been tested on ubuntu 12.04 (and also might only be an issue there).
-  if platform_family?("debian")
-    notifies :stop, "service[mongodb]", :immediately
-    notifies :disable, "service[mongodb]", :immediately
+else
+  # Without :install_url, install from the repository
+  package node[:mongodb][:package_name] do
+    action :install
+    version node[:mongodb][:package_version]
+
+    # The deb package automatically starts mongo, which breaks stuff.
+    # Stop it immediately, but only if something changed (i.e. install).
+    # Only been tested on ubuntu 12.04 (and also might only be an issue there).
+    if platform_family?("debian")
+      notifies :stop, "service[mongodb]", :immediately
+      notifies :disable, "service[mongodb]", :immediately
+    end
   end
 end
-
 
 # Create keyFile if specified
 if node[:mongodb][:key_file]
