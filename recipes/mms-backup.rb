@@ -10,6 +10,26 @@ include_recipe 'apt'
 include_recipe 'python'
 python_pip 'pymongo'
 
+# preparation
+user node[:mongodb][:mms_backup][:user] do
+  comment 'User that the mms backup and monitoring agents run as'
+  notifies :restart, 'service[mongodb-mms-backup-agent]', :delayed
+end
+
+directory '/mnt/log/mongodb-mms' do
+  recursive true
+  owner node[:mongodb][:mms_backup][:user]
+  group node[:mongodb][:mms_backup][:group]
+  mode '0755'
+  ignore_failure true
+end
+
+# TODO: Add a delete step if this dir already exists and is a regular directory?
+link node[:mongodb][:mms_backup][:log_dir] do
+  to '/mnt/log/mongodb-mms'
+  ignore_failure true
+end
+
 # installation
 deb_file = "#{Chef::Config[:file_cache_path]}/mms_backup.deb"
 provider = Chef::Provider::Package::Dpkg

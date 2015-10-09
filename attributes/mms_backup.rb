@@ -7,3 +7,6 @@ default[:mongodb][:mms_backup][:install_url] = "https://mms.mongodb.com/download
 # listed here for reference
 default[:mongodb][:mms_backup][:config_file] = "/etc/mongodb-mms/backup-agent.config"
 default[:mongodb][:mms_backup][:log_file] = "/var/log/mongodb-mms/backup-agent.log"
+default[:mongodb][:mms_backup][:log_dir] = "/var/log/mongodb-mms"
+default[:mongodb][:mms_backup][:user] = "mongodb-mms-agent"
+default[:mongodb][:mms_backup][:group] = "mongodb-mms-agent"
