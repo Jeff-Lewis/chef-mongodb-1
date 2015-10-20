@@ -36,6 +36,12 @@ if node[:mongodb][:install_url]
     action :install
     source "#{Chef::Config[:file_cache_path]}/mongodb-10gen.deb"
     version node[:mongodb][:package_version]
+
+    # The deb package automatically starts mongo, which breaks stuff.
+    # Stop it immediately, but only if something changed (i.e. install).
+    # Only been tested on ubuntu 12.04 (and also might only be an issue there).
+    notifies :stop, "service[mongodb]", :immediately
+    notifies :disable, "service[mongodb]", :immediately
   end
 else
   # Without :install_url, install from the repository
